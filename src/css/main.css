@@ -1,7 +1,15 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v7.0.29,
+* Autoprefixer: v9.7.6
+* Browsers: last 4 version
+*/
+
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
 }
 body {
     background-color: #f7f6f0;
@@ -12,8 +20,12 @@ body {
     max-width: 775px;
 }
 header {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-between;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
 }
 #add, #close {
     border: none;
@@ -34,7 +46,8 @@ header {
     border-radius: 10px;
     margin: 6vh auto;
     background: white;
-    box-shadow: 0px 0px 10px #d3d1d1;
+    -webkit-box-shadow: 0px 0px 10px #d3d1d1;
+            box-shadow: 0px 0px 10px #d3d1d1;
 }
 .hidden {
     display: none !important;
@@ -58,7 +71,20 @@ header {
     border-radius: 5px;
     border: 1px solid #f2f4f5;
     outline: none;
-    box-shadow: 1px 1px 10px rgb(213, 214, 216);
+    -webkit-box-shadow: 1px 1px 10px rgb(213, 214, 216);
+            box-shadow: 1px 1px 10px rgb(213, 214, 216);
+}
+#otp-form input::-webkit-input-placeholder {
+    text-align: center;
+}
+#otp-form input::-moz-placeholder {
+    text-align: center;
+}
+#otp-form input:-ms-input-placeholder {
+    text-align: center;
+}
+#otp-form input::-ms-input-placeholder {
+    text-align: center;
 }
 #otp-form input::placeholder {
     text-align: center;
@@ -73,12 +99,16 @@ header {
     border: none;
     outline: none;
     border-radius: 5px;
+    background-image: -webkit-gradient(linear, left top, right top, from(#4dadf7), to(#3390fa));
+    background-image: -o-linear-gradient(left, #4dadf7, #3390fa);
     background-image: linear-gradient(to right, #4dadf7, #3390fa);
-    box-shadow: 0px 0px 10px #7599d3;
+    -webkit-box-shadow: 0px 0px 10px #7599d3;
+            box-shadow: 0px 0px 10px #7599d3;
     color: #f7f6f0;
 }
 .blur {
-    filter: blur(2px);
+    -webkit-filter: blur(2px);
+            filter: blur(2px);
 }
 #key-box {
     margin: 3% 0;
@@ -89,12 +119,20 @@ header {
     width: 55%;
     border-radius: 5px;
     background: #fff;
-    box-shadow: 0px 0px 10px #d3d1d1;
+    -webkit-box-shadow: 0px 0px 10px #d3d1d1;
+            box-shadow: 0px 0px 10px #d3d1d1;
 }
 .empty-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     text-align: center;
 }
 #big-emotion {
@@ -141,7 +179,8 @@ header {
     border-radius: 5px;
     color: #f2f4f5;
     background-color: rgb(7, 148, 243);
-    animation: disappear 3s 1;
+    -webkit-animation: disappear 3s 1;
+            animation: disappear 3s 1;
 }
 
 .red-bg {
