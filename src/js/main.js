@@ -44,7 +44,7 @@ function generateToken(data) {
       secret: data.secret,
     });
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
     return 0;
   }
   return totp.generate();
@@ -52,13 +52,14 @@ function generateToken(data) {
 function handleSubmit() {
   let data = getInputData();
   if(!generateToken(data)){
-    sendMessage("Your secret key is wrong.", "error");
+    sendMessage("Something went wrong. (Please look at console to see error log)", "error");
     return;
   }
   keys.push(data);
   localStorage.setItem('keys', JSON.stringify(keys));
   let keyItem = makeKeyItemElem(data.label, data.issuer, data.period);
   keyBox.appendChild(keyItem);
+  currentId ++;
   if(document.getElementsByClassName('empty-item').length) emptyItem.parentNode.removeChild(emptyItem);
   toggleModal();
 }

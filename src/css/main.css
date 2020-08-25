@@ -54,6 +54,7 @@ header {
     text-align: center;
     height: 30px;
     width: 52%;
+    padding: 0 8px;
     border-radius: 5px;
     border: 1px solid #f2f4f5;
     outline: none;
