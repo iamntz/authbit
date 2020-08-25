@@ -10,7 +10,9 @@ const issuer = document.getElementById("issuer");
 const secret = document.getElementById("secret");
 const period = document.getElementById("period");
 const messageBox = document.getElementById("message-box");
-let keys = localStorage.getItem('keys') ? JSON.parse(localStorage.getItem('keys')) : [];
+let keys = localStorage.getItem("keys")
+  ? JSON.parse(localStorage.getItem("keys"))
+  : [];
 let currentId = 0;
 loadLocalData();
 addBtn.addEventListener("click", toggleModal);
@@ -24,17 +26,17 @@ function checkBrowser() {
     alert("Your browser is not supported");
   }
 }
-function loadLocalData(){
-    for(let key of keys){
-        if(document.getElementsByClassName('empty-item').length) emptyItem.parentNode.removeChild(emptyItem);
-        let keyElem = makeKeyItemElem(key.label, key.issuer, key.period);
-        keyBox.appendChild(keyElem);
-        currentId++;
-    }
+function loadLocalData() {
+  for (let key of keys) {
+    if (document.getElementsByClassName("empty-item").length)
+      emptyItem.parentNode.removeChild(emptyItem);
+    let keyElem = makeKeyItemElem(key.label, key.issuer, key.period);
+    keyBox.appendChild(keyElem);
+  }
 }
 function generateToken(data) {
   let totp;
-    try {
+  try {
     totp = new OTPAuth.TOTP({
       issuer: data.issuer,
       label: data.label,
@@ -45,22 +47,26 @@ function generateToken(data) {
     });
   } catch (err) {
     console.error(err.message);
+    console.warn("Please double check your secret.");
     return 0;
   }
   return totp.generate();
 }
 function handleSubmit() {
   let data = getInputData();
-  if(!generateToken(data)){
-    sendMessage("Something went wrong. (Please look at console to see error log)", "error");
+  if (!generateToken(data)) {
+    sendMessage(
+      "Something went wrong. Please look at console to see error log",
+      "error"
+    );
     return;
   }
   keys.push(data);
-  localStorage.setItem('keys', JSON.stringify(keys));
+  localStorage.setItem("keys", JSON.stringify(keys));
   let keyItem = makeKeyItemElem(data.label, data.issuer, data.period);
   keyBox.appendChild(keyItem);
-  currentId ++;
-  if(document.getElementsByClassName('empty-item').length) emptyItem.parentNode.removeChild(emptyItem);
+  if (document.getElementsByClassName("empty-item").length)
+    emptyItem.parentNode.removeChild(emptyItem);
   toggleModal();
 }
 function getInputData() {
@@ -72,17 +78,17 @@ function getInputData() {
     period: parseInt(period.value),
   };
 }
-function sendMessage(message, type){
-    let messageItem = document.createElement('div');
-    messageItem.className = 'message';
-    messageItem.textContent = message;
-    if(type == 'error') messageItem.classList.add('red-bg');
-    messageBox.appendChild(messageItem);
+function sendMessage(message, type) {
+  let messageItem = document.createElement("div");
+  messageItem.className = "message";
+  messageItem.textContent = message;
+  if (type == "error") messageItem.classList.add("red-bg");
+  messageBox.appendChild(messageItem);
 }
-function removeMessage(){
-    for(let elem of document.getElementsByClassName('message')){
-        elem.parentNode.removeChild(elem);
-    }
+function removeMessage() {
+  for (let elem of document.getElementsByClassName("message")) {
+    elem.parentNode.removeChild(elem);
+  }
 }
 function clearForm() {
   label.value = "";
@@ -128,10 +134,70 @@ function makeKeyItemElem(label, issuer, period) {
   let codeItem = document.createElement("p");
   codeItem.className = "code";
   codeItem.textContent = "000000";
+  let options = document.createElement("div");
+  options.className = "options";
+  let editBtn = document.createElement("button");
+  editBtn.className = "edit-btn";
+  editBtn.addEventListener("click", editItem);
+  let removeBtn = document.createElement("button");
+  removeBtn.className = "remove-btn";
+  removeBtn.addEventListener("click", removeItem);
+  options.appendChild(editBtn);
+  options.appendChild(removeBtn);
   keyItem.appendChild(heading);
   keyItem.appendChild(clearfix);
   keyItem.appendChild(codeItem);
+  keyItem.appendChild(options);
+  currentId++;
   return keyItem;
+}
+function removeItem(e) {
+  if (
+    confirm("Are you sure? (Your browser will be refreshed after delete item)")
+  ) {
+    let id = get2ndParentId(e);
+    keys.splice(id, 1);
+    localStorage.setItem("keys", JSON.stringify(keys));
+    window.location.reload();
+  }
+}
+const get2ndParentId = (e) =>
+  parseInt(e.target.parentNode.parentNode.getAttribute("key-id"));
+function editItem(e) {
+  toggleModal();
+  let id = get2ndParentId(e);
+  console.log(id);
+  label.value = keys[id].label;
+  issuer.value = keys[id].issuer;
+  period.value = keys[id].period;
+  secret.value = keys[id].textContent;
+  submitBtn.removeEventListener("click", handleSubmit);
+  submitBtn.addEventListener("click", () => updateData(id));
+}
+function updateData(id) {
+  let data = getInputData();
+  if (!generateToken(data)) {
+    sendMessage(
+      "Something went wrong. Please look at console to see error log."
+    );
+    return;
+  }
+  console.log(data);
+  console.log(keys[id]);
+  keys[id] = data;
+  localStorage.setItem("keys", JSON.stringify(keys));
+  updateElement(id, data);
+  toggleModal();
+}
+function updateElement(id, data) {
+  const label = document.querySelector(`[key-id="${id}"] .item-label`);
+  const issuer = document.querySelector(`[key-id="${id}"] .item-issuer`);
+  const period = document.querySelector(`[key-id="${id}"] .timer`);
+  const code = document.querySelector(`[key-id="${id}"] .code`);
+  label.textContent = data.label;
+  issuer.textContent = data.issuer;
+  period.textContent = data.period;
+  code.textContent = generateToken(data);
 }
 function toggleModal() {
   modal.classList.toggle("hidden");
