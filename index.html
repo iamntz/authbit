@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuthBit</title>
+    <link rel="stylesheet" href="src/css/main.css" />
+  </head>
+  <body>
+    <div id="container">
+      <header>
+        <h1 id="title">AuthBit.</h1>
+        <button id="add">
+          <img src="src/img/plus.svg" alt="" />
+        </button>
+      </header>
+      <main>
+          <div id="key-box">
+            <div class="key-item empty-item">
+            <h2 id="big-emotion">:(</h2>
+            <p id="empty">There's nothing here. Please add one!</p>
+        </div>
+    </div>
+      </main>
+    </div>
+    <div id="modal" class="hidden">
+      <button id="close">
+        <img src="src/img/close.svg" alt="" />
+      </button>
+      <div class="clearfix"></div>
+      <div id="otp-form">
+        <label for="label">Label (optional)</label><br />
+        <input type="text" id="label" name="label" placeholder="Label" />
+        <label for="issuer">Issuer (optional)</label><br />
+        <input type="text" name="issuer" id="issuer" placeholder="Issuer" />
+        <label for="secret">Secret</label><br />
+        <input
+          type="password"
+          name="secret"
+          id="secret"
+          placeholder="Secret"
+          required
+        />
+        <label for="period">Period</label>
+        <input type="number" name="period" id="period" value="30" required />
+        <button id="submit-btn">Add</button>
+      </div>
+    </div>
+    <div id="message-box"></div>
+    <script src="src/js/otpauth.umd.min.js"></script>
+    <script src="src/js/main.js"></script>
+  </body>
+</html>
