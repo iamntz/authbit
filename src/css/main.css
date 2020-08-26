@@ -241,6 +241,6 @@ header {
     width: 75%;
   }
   .options {
-      display: block;
+      display: flex;
   }
 }
