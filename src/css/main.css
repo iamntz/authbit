@@ -235,19 +235,13 @@ header {
   #container {
     width: 90%;
   }
-  #modal {
-    top: 5vh;
-    left: 7.5%;
-    width: 85%;
-    padding: 5%;
-  }
   .key-item {
     width: 85%;
   }
-  #otp-form input {
-    width: 75%;
-  }
   .options {
       display: flex;
+  }
+  .modal-box {
+    padding: 10px !important;
   }
 }
