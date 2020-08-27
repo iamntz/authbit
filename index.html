@@ -23,18 +23,19 @@
     </div>
       </main>
     </div>
-    <div id="modal" class="hidden">
-      <button id="close">
+    <div id="add-item" class="modal hidden">
+      <div class="modal-box"><button id="close">
         <img src="src/img/close.svg" alt="" />
       </button>
       <div class="clearfix"></div>
       <div id="otp-form">
         <label for="label">Label (optional)</label><br />
-        <input type="text" id="label" name="label" placeholder="Label" />
+        <input type="text" id="label" class="input-field" name="label" placeholder="Label" />
         <label for="issuer">Issuer (optional)</label><br />
-        <input type="text" name="issuer" id="issuer" placeholder="Issuer" />
+        <input type="text" name="issuer" id="issuer" class="input-field" placeholder="Issuer" />
         <label for="secret">Secret</label><br />
         <input
+          class="input-field"
           type="password"
           name="secret"
           id="secret"
@@ -42,12 +43,14 @@
           required
         />
         <label for="period">Period</label>
-        <input type="number" name="period" id="period" value="30" required />
-        <button id="submit-btn">Add</button>
+        <input type="number" name="period" class="input-field" id="period" value="30" required />
+        <button class="button blue-gradient-bg" id="submit-btn">Add</button>
       </div>
+    </div>
     </div>
     <div id="message-box"></div>
     <script src="src/js/otpauth.umd.min.js"></script>
     <script src="src/js/main.js"></script>
+    <script src="src/js/Blowfish.js"></script>
   </body>
 </html>

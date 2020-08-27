@@ -1,5 +1,5 @@
 const addBtn = document.getElementById("add");
-const modal = document.getElementById("modal");
+const addModal = document.getElementById("add-item");
 const closeBtn = document.getElementById("close");
 const submitBtn = document.getElementById("submit-btn");
 const emptyItem = document.getElementsByClassName("empty-item")[0];
@@ -14,13 +14,77 @@ let keys = localStorage.getItem("keys")
   ? JSON.parse(localStorage.getItem("keys"))
   : [];
 let currentId = 0;
-loadLocalData();
-addBtn.addEventListener("click", toggleModal);
-closeBtn.addEventListener("click", toggleModal);
-submitBtn.addEventListener("click", handleSubmit);
-setInterval(countdown, 1000);
-setInterval(removeMessage, 3000);
+let isPwd = localStorage.getItem("isPwd")
+  ? localStorage.getItem("isPwd")
+  : "false";
+let isAuthenticated = false;
+let password, keeper;
 
+
+main();
+function main() {
+  if (!isAuthenticated) {
+    authenticator();
+  } else {
+    loadLocalData();
+    addBtn.addEventListener("click", toggleModal);
+    closeBtn.addEventListener("click", toggleModal);
+    submitBtn.addEventListener("click", handleSubmit);
+    setInterval(countdown, 1000);
+    setInterval(removeMessage, 3000);
+  }
+}
+function authenticator(e) {
+  container.classList.toggle("blur");
+  let authModal = makeAuthenticatorModal(isPwd == "false" ? "setup" : "login");
+  document.body.appendChild(authModal);
+}
+function processAuth(e) {
+  password = document.getElementById("password").value;
+  keeper = new Blowfish(password);
+  if (e.target.act == "setup") {
+    localStorage.setItem("hello", keeper.encrypt("hello"));
+    isPwd = "true";
+    localStorage.setItem("isPwd", true);
+    isAuthenticated = true;
+    main();
+  } else if (localStorage.getItem("hello") != keeper.encrypt("hello")) {
+    sendMessage("Wrong password.", "error");
+    authenticator();
+  } else {
+    isAuthenticated = true;
+    main();
+  }
+  document.body.removeChild(document.getElementById("auth-modal"));
+  container.classList.toggle("blur");
+}
+function makeAuthenticatorModal(type) {
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  modal.id = "auth-modal";
+  const modalBox = document.createElement("div");
+  modalBox.className = "modal-box";
+  let title = document.createElement("h3");
+  title.style.textAlign = "center";
+  title.style.marginBottom = "10px";
+  title.textContent =
+    type == "setup" ? "Set up your password" : "Input your password";
+  let passwordField = document.createElement("input");
+  passwordField.type = "password";
+  passwordField.id = "password";
+  passwordField.className = "input-field";
+  passwordField.placeholder = "Password";
+  let submitBtn = document.createElement("button");
+  submitBtn.classList.add("button", "blue-gradient-bg");
+  submitBtn.textContent = "Submit";
+  submitBtn.act = type == "setup" ? "setup" : "login";
+  submitBtn.addEventListener("click", processAuth);
+  modalBox.appendChild(title);
+  modalBox.appendChild(passwordField);
+  modalBox.appendChild(submitBtn);
+  modal.appendChild(modalBox);
+  return modal;
+}
 function checkBrowser() {
   if (typeof Storage == "undefined") {
     alert("Your browser is not supported");
@@ -43,7 +107,7 @@ function generateToken(data) {
       algorithm: "SHA1",
       digits: 6,
       period: data.period,
-      secret: data.secret,
+      secret: keeper.trimZeros(keeper.decrypt(data.secret)),
     });
   } catch (err) {
     console.error(err.message);
@@ -54,6 +118,7 @@ function generateToken(data) {
 }
 function handleSubmit() {
   let data = getInputData();
+  data.secret = keeper.encrypt(data.secret);
   if (!generateToken(data)) {
     sendMessage(
       "Something went wrong. Please look at console to see error log",
@@ -73,7 +138,7 @@ function getInputData() {
   return {
     label: label.value ? label.value : "Unlabel",
     issuer: issuer.value ? issuer.value : "AuthBit",
-    secret: secret.value.replace(/ +/g, ''),
+    secret: secret.value.replace(/ +/g, ""),
     digits: 6,
     period: parseInt(period.value),
   };
@@ -166,28 +231,30 @@ const get2ndParentId = (e) =>
 function editItem(e) {
   toggleModal();
   let id = get2ndParentId(e);
-  console.log(id);
   label.value = keys[id].label;
   issuer.value = keys[id].issuer;
   period.value = keys[id].period;
-  secret.value = keys[id].textContent;
+  secret.value = keeper.trimZeros(keeper.decrypt(keys[id].secret));
   submitBtn.removeEventListener("click", handleSubmit);
-  submitBtn.addEventListener("click", () => updateData(id));
+  submitBtn.id = id;
+  submitBtn.addEventListener("click", updateData);
 }
-function updateData(id) {
+function updateData(e) {
+  let id = submitBtn.id;
   let data = getInputData();
+  data.secret = keeper.encrypt(data.secret);
   if (!generateToken(data)) {
     sendMessage(
       "Something went wrong. Please look at console to see error log."
     );
     return;
   }
-  console.log(data);
-  console.log(keys[id]);
   keys[id] = data;
   localStorage.setItem("keys", JSON.stringify(keys));
   updateElement(id, data);
   toggleModal();
+  submitBtn.addEventListener('click', handleSubmit);
+  submitBtn.removeEventListener('click', updateData);
 }
 function updateElement(id, data) {
   const label = document.querySelector(`[key-id="${id}"] .item-label`);
@@ -200,7 +267,7 @@ function updateElement(id, data) {
   code.textContent = generateToken(data);
 }
 function toggleModal() {
-  modal.classList.toggle("hidden");
+  addModal.classList.toggle("hidden");
   container.classList.toggle("blur");
   clearForm();
 }
