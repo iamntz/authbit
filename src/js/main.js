@@ -73,7 +73,7 @@ function getInputData() {
   return {
     label: label.value ? label.value : "Unlabel",
     issuer: issuer.value ? issuer.value : "AuthBit",
-    secret: secret.value,
+    secret: secret.value.replace(/ +/g, ''),
     digits: 6,
     period: parseInt(period.value),
   };
