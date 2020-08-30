@@ -29,15 +29,23 @@ header {
   justify-content: space-between;
 }
 #add,
-#close {
+#close ,
+#log-out {
   border: none;
   background: none;
   outline: none;
 }
 #add img,
-#close img {
+#close img,
+#log-out img {
   width: 22px;
   height: 22px;
+}
+#log-out {
+  float: right;
+}
+button:hover {
+  opacity: 0.6;
 }
 .modal {
   position: fixed;

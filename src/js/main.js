@@ -10,6 +10,7 @@ const issuer = document.getElementById("issuer");
 const secret = document.getElementById("secret");
 const period = document.getElementById("period");
 const messageBox = document.getElementById("message-box");
+const logOutBtn = document.getElementById('log-out');
 let keys = localStorage.getItem("keys")
   ? JSON.parse(localStorage.getItem("keys"))
   : [];
@@ -19,6 +20,7 @@ let isPwd = localStorage.getItem("isPwd")
   : "false";
 let password, keeper;
 if(sessionStorage.isAuthenticated == undefined) sessionStorage.isAuthenticated = 'false';
+
 main();
 function main() {
   if (sessionStorage.isAuthenticated == 'false') {
@@ -28,6 +30,7 @@ function main() {
     addBtn.addEventListener("click", toggleModal);
     closeBtn.addEventListener("click", toggleModal);
     submitBtn.addEventListener("click", handleSubmit);
+    logOutBtn.addEventListener('click', logOut);
     setInterval(countdown, 1000);
     setInterval(removeMessage, 3000);
   }
@@ -55,6 +58,12 @@ function processAuth(e) {
   }
   document.body.removeChild(document.getElementById("auth-modal"));
   container.classList.toggle("blur");
+}
+function logOut(){
+  if(confirm("Are you sure?")){
+    sessionStorage.isAuthenticated = 'false';
+    window.location.reload();
+  }
 }
 function makeAuthenticatorModal(type) {
   const modal = document.createElement("div");
