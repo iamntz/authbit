@@ -17,13 +17,11 @@ let currentId = 0;
 let isPwd = localStorage.getItem("isPwd")
   ? localStorage.getItem("isPwd")
   : "false";
-let isAuthenticated = false;
 let password, keeper;
-
-
+if(sessionStorage.isAuthenticated == undefined) sessionStorage.isAuthenticated = 'false';
 main();
 function main() {
-  if (!isAuthenticated) {
+  if (sessionStorage.isAuthenticated == 'false') {
     authenticator();
   } else {
     loadLocalData();
@@ -46,13 +44,13 @@ function processAuth(e) {
     localStorage.setItem("hello", keeper.encrypt("hello"));
     isPwd = "true";
     localStorage.setItem("isPwd", true);
-    isAuthenticated = true;
+    sessionStorage.isAuthenticated = 'true';
     main();
   } else if (localStorage.getItem("hello") != keeper.encrypt("hello")) {
     sendMessage("Wrong password.", "error");
     authenticator();
   } else {
-    isAuthenticated = true;
+    sessionStorage.isAuthenticated = 'true';
     main();
   }
   document.body.removeChild(document.getElementById("auth-modal"));
