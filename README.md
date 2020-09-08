@@ -9,9 +9,9 @@ AuthBit is built with:
  - [javascript-blowfish](https://github.com/javascript-blowfish) library to encrypt and decrypt data using Blowfish algorithms
 
 ## Security
- Your secret key will be encrypted. And all your data is stored locally. 
+Your secret key will be encrypted. And all your data is stored locally. 
 You can fork this repository and self-hosted AuthBit and use it even when you're offline.
-I can't sure is's 100 % safe. So, **USE IT AT YOUR OWN RISK.**
+I can't be sure it's 100 % safe, so **USE IT AT YOUR OWN RISK.**
 
 ## Credit
  - Thank to [Flaticon](https://flaticon.com) for their nice icons.
