@@ -42,6 +42,10 @@ function authenticator(e) {
 }
 function processAuth(e) {
   password = document.getElementById("password").value;
+  if(password.length < 10){
+    sendMessage("Password must be at least 10 characters");
+    return;
+  }
   keeper = new Blowfish(password);
   if (e.target.act == "setup") {
     localStorage.setItem("hello", keeper.encrypt("hello"));
